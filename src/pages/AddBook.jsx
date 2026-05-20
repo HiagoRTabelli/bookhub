@@ -9,8 +9,7 @@ function AddBook() {
     const [category, setCategory] = useState("")
     const [description, setDescription] = useState("")
     const [rating, setRating] = useState("")
-    const [cover, setCover] = useState(null)
-    const [preview, setPreview] = useState("")
+    const [cover, setCover] = useState("")
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState("")
     const [error, setError] = useState("")
@@ -25,21 +24,18 @@ function AddBook() {
         try {
             const token = localStorage.getItem("token")
 
-            const formData = new FormData()
-
-            formData.append("title", title)
-            formData.append("category", category)
-            formData.append("description", description)
-            formData.append("rating", rating)
-            formData.append("cover", cover)
-
-            axios.post(
+            await axios.post(
                 `${import.meta.env.VITE_API_URL}/api/books`,
-                formData,
+                {
+                    title,
+                    category,
+                    description,
+                    rating,
+                    cover,
+                },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
                     },
                 }
             )
@@ -62,15 +58,6 @@ function AddBook() {
         }
     }
 
-    function handleImageChange(event) {
-        const file = event.target.files[0]
-
-        if (file) {
-            setCover(file)
-            setPreview(URL.createObjectURL(file))
-        }
-    }
-
     return (
         <main className="max-w-3xl mx-auto px-6 py-16">
             <h1 className="text-5xl font-bold mb-3">
@@ -78,7 +65,7 @@ function AddBook() {
             </h1>
 
             <p className="text-zinc-400 mb-10">
-                Envie uma capa real do seu computador.
+                Cadastre um livro usando a URL da capa.
             </p>
 
             <form
@@ -109,36 +96,21 @@ function AddBook() {
                     className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-400"
                 />
 
-                <label className="bg-zinc-800 border-2 border-dashed border-zinc-700 rounded-2xl p-6 cursor-pointer hover:border-blue-400 duration-300 text-center flex flex-col items-center justify-center gap-4">
-                    {preview ? (
-                        <img
-                            src={preview}
-                            alt="Preview da capa"
-                            className="w-48 h-64 object-cover rounded-xl shadow-lg"
-                        />
-                    ) : (
-                        <>
-                            <span className="text-5xl">
-                                📚
-                            </span>
+                <input
+                    type="text"
+                    placeholder="URL da capa"
+                    value={cover}
+                    onChange={(event) => setCover(event.target.value)}
+                    className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-400"
+                />
 
-                            <span className="font-semibold text-blue-400">
-                                Adicionar foto da capa
-                            </span>
-
-                            <p className="text-zinc-500 text-sm">
-                                PNG, JPG ou WEBP
-                            </p>
-                        </>
-                    )}
-
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="hidden"
+                {cover && (
+                    <img
+                        src={cover}
+                        alt="Preview da capa"
+                        className="w-48 h-64 object-cover rounded-xl shadow-lg mx-auto"
                     />
-                </label>
+                )}
 
                 <textarea
                     placeholder="Descrição"
