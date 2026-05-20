@@ -1,102 +1,89 @@
 # BookHub 📚
 
-A virtual library system built with React and TailwindCSS.
+A full stack virtual library platform built with React, Node.js, Express and MongoDB.
 
-The project allows users to browse books, search, favorite, rate, and manage books through an admin dashboard.
+BookHub allows users to explore books, create accounts, manage favorites, and access an admin dashboard for complete book management.
 
 ---
 
-# 🚀 Features
+# 🚀 Live Demo
 
-✅ Modern homepage  
-✅ Book library  
-✅ Book search  
-✅ Category filters  
+## Frontend
+https://bookhub-two-beta.vercel.app
+
+## Backend API
+https://bookhub-backend-w13d.onrender.com
+
+---
+
+# ✨ Features
+
+## User Features
+
+✅ User registration and login  
+✅ JWT authentication  
+✅ Browse books  
 ✅ Individual book pages  
-✅ Favorites with localStorage  
-✅ Star rating system  
-✅ Fake authentication system  
+✅ Favorite books system  
+✅ Responsive design  
+✅ Modern UI with TailwindCSS  
+✅ Protected routes  
+
+---
+
+## Admin Features
+
 ✅ Admin dashboard  
 ✅ Add new books  
-✅ Delete custom books  
-✅ Dark Mode / Light Mode  
-✅ Mobile responsive layout  
+✅ Edit books  
+✅ Delete books  
+✅ Book management system  
+✅ Admin-only access control  
 
 ---
 
 # 🛠️ Technologies Used
 
+## Frontend
 - React
 - React Router DOM
 - TailwindCSS
-- JavaScript
+- Axios
 - Vite
-- LocalStorage
+- JavaScript
+
+## Backend
+- Node.js
+- Express.js
+- MongoDB Atlas
+- Mongoose
+- JWT Authentication
+- bcryptjs
+- Multer
+
+## Deployment
+- Vercel
+- Render
+- MongoDB Atlas
 
 ---
 
 # 📷 Preview
 
-## Home
-
-Modern interface featuring popular books.
+## Home Page
+Modern homepage with featured books and responsive layout.
 
 ## Library
-
-Book listing with search and category filters.
+Browse books with detailed information and favorite system.
 
 ## Admin Dashboard
-
-Administrative panel for managing books.
+Complete admin panel for managing books.
 
 ---
 
-# ⚙️ Running the Project
+# ⚙️ Running the Project Locally
 
-## Install dependencies
+## 1. Clone the repository
 
 ```bash
-npm install
-```
-
-## Start development server
-
-```bash
-npm run dev
-```
-
----
-
-# 📚 What I Learned
-
-This project was developed to practice:
-
-- Componentization
-- React Router
-- Hooks
-- useState
-- useEffect
-- Form handling
-- localStorage persistence
-- React application architecture
-- Responsive layouts
-- Frontend CRUD operations
-
----
-
-# 🔮 Future Improvements
-
-- Backend with Node.js
-- REST API
-- MongoDB database
-- Real authentication with JWT
-- Image upload system
-- Real user accounts
-- Book comments
-- Ranking system
-
----
-
-# 👨‍💻 Author
-
-Developed by Hiago Rodrigues.
+git clone https://github.com/HiagoRTabelli/bookhub.git
