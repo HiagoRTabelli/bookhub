@@ -1,90 +1,85 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import axios from "axios"
 
 function Register() {
-    // Aqui guardamos os dados digitados no formulário
+    const navigate = useNavigate()
+
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
 
-    // Essa função roda quando o usuário clica em "Criar conta"
-    function handleSubmit(event) {
-        // Impede a página de recarregar
-        event.preventDefault()
+    async function handleRegister(e) {
+        e.preventDefault()
 
-        // Por enquanto vamos apenas mostrar os dados no console
-        console.log("Nome:", name)
-        console.log("Email:", email)
-        console.log("Senha:", password)
+        try {
+            axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+                name,
+                email,
+                password
+            })
 
-        alert("Cadastro capturado! Veja o console.")
+            alert("Account created successfully!")
+            navigate("/login")
+
+        } catch (error) {
+            setError(
+                error.response?.data?.message ||
+                "Register failed"
+            )
+        }
     }
 
     return (
-        <main className="min-h-[80vh] flex items-center justify-center px-6">
-            <div className="bg-zinc-800 border border-zinc-700 rounded-2xl p-8 w-full max-w-md">
+        <main className="min-h-screen flex items-center justify-center px-6">
+            <form
+                onSubmit={handleRegister}
+                className="bg-zinc-950 border border-zinc-800 rounded-3xl p-10 w-full max-w-md"
+            >
+                <h1 className="text-4xl font-bold mb-8 text-center text-blue-400">
+                    Create Account
+                </h1>
 
-                <h2 className="text-3xl font-bold mb-2">
-                    Criar conta
-                </h2>
+                {error && (
+                    <p className="bg-red-500/20 border border-red-500 text-red-300 p-3 rounded-xl mb-6">
+                        {error}
+                    </p>
+                )}
 
-                <p className="text-zinc-400 mb-8">
-                    Cadastre-se no BookHub.
-                </p>
+                <div className="flex flex-col gap-6">
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-500"
+                    />
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-500"
+                    />
 
-                    <div>
-                        <label className="block mb-2 text-sm text-zinc-300">
-                            Nome
-                        </label>
-
-                        <input
-                            type="text"
-                            placeholder="Seu nome"
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-400"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block mb-2 text-sm text-zinc-300">
-                            E-mail
-                        </label>
-
-                        <input
-                            type="email"
-                            placeholder="seuemail@email.com"
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-400"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block mb-2 text-sm text-zinc-300">
-                            Senha
-                        </label>
-
-                        <input
-                            type="password"
-                            placeholder="Digite uma senha"
-                            value={password}
-                            onChange={(event) => setPassword(event.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-400"
-                        />
-                    </div>
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-500"
+                    />
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 hover:bg-blue-600 duration-300 rounded-xl py-3 font-semibold"
+                        className="bg-blue-500 hover:bg-blue-600 duration-300 rounded-xl py-3 font-bold"
                     >
-                        Criar conta
+                        Register
                     </button>
-
-                </form>
-
-            </div>
+                </div>
+            </form>
         </main>
     )
 }

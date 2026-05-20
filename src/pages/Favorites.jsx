@@ -1,45 +1,81 @@
+import { useEffect, useState } from "react"
+import axios from "axios"
+
 import BookCard from "../components/BookCard"
-import books from "../data/books"
 
 function Favorites() {
-    const customBooks = JSON.parse(localStorage.getItem("customBooks")) || []
-    const allBooks = [...books, ...customBooks]
+    const [books, setBooks] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || []
+    useEffect(() => {
+        async function fetchFavorites() {
+            try {
+                const token = localStorage.getItem("token")
 
-    const favoriteBooks = allBooks.filter((book) =>
-        favorites.includes(book.id)
-    )
+                if (!token) {
+                    setBooks([])
+                    return
+                }
+
+                const response = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/api/favorites`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
+
+                setBooks(response.data)
+
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchFavorites()
+    }, [])
+
+    if (loading) {
+        return (
+            <main className="max-w-7xl mx-auto px-6 py-16">
+                <p className="text-zinc-400">
+                    Carregando favoritos...
+                </p>
+            </main>
+        )
+    }
 
     return (
         <main className="max-w-7xl mx-auto px-6 py-16">
-
             <div className="mb-10">
                 <h1 className="text-5xl font-bold mb-3">
                     Favoritos
                 </h1>
 
                 <p className="text-zinc-400">
-                    Seus livros salvos.
+                    Seus livros favoritos salvos no MongoDB.
                 </p>
             </div>
 
-            {favoriteBooks.length === 0 ? (
+            {books.length === 0 ? (
                 <div className="bg-zinc-800 border border-zinc-700 rounded-2xl p-10 text-center">
                     <h2 className="text-3xl font-bold mb-4">
                         Nenhum favorito ainda
                     </h2>
 
                     <p className="text-zinc-400">
-                        Clique no coração dos livros para adicioná-los aqui.
+                        Favorite algum livro na biblioteca.
                     </p>
                 </div>
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {favoriteBooks.map((book) => (
+                    {books.map((book) => (
                         <BookCard
-                            key={book.id}
-                            id={book.id}
+                            key={book._id}
+                            id={book._id}
                             title={book.title}
                             category={book.category}
                             rating={book.rating}
@@ -49,7 +85,6 @@ function Favorites() {
                     ))}
                 </div>
             )}
-
         </main>
     )
 }

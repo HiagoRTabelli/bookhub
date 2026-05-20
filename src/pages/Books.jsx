@@ -1,18 +1,32 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import axios from "axios"
+
 import BookCard from "../components/BookCard"
-import books from "../data/books"
 
 function Books() {
+    const [books, setBooks] = useState([])
     const [search, setSearch] = useState("")
     const [category, setCategory] = useState("Todos")
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState("")
 
-    // Pega os livros adicionados pelo admin
-    const customBooks = JSON.parse(localStorage.getItem("customBooks")) || []
+    useEffect(() => {
+        async function fetchBooks() {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/books`)
 
-    // Junta os livros fixos com os livros adicionados
-    const allBooks = [...books, ...customBooks]
+                setBooks(response.data)
+                setLoading(false)
+            } catch (error) {
+                setError("Erro ao carregar livros")
+                setLoading(false)
+            }
+        }
 
-    const filteredBooks = allBooks.filter((book) => {
+        fetchBooks()
+    }, [])
+
+    const filteredBooks = books.filter((book) => {
         const matchSearch = book.title
             .toLowerCase()
             .includes(search.toLowerCase())
@@ -35,7 +49,7 @@ function Books() {
                     </h1>
 
                     <p className="text-zinc-400">
-                        Explore livros incríveis.
+                        Livros carregados diretamente do MongoDB.
                     </p>
                 </div>
 
@@ -55,32 +69,45 @@ function Books() {
                         className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-400"
                     >
                         <option>Todos</option>
-                        <option>Fantasia</option>
-                        <option>Ficção Científica</option>
-                        <option>Terror</option>
+                        <option>Fantasy</option>
+                        <option>Fiction</option>
+                        <option>Horror</option>
                         <option>Romance</option>
-                        <option>Aventura</option>
                     </select>
 
                 </div>
 
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {loading && (
+                <p className="text-zinc-400">
+                    Carregando livros...
+                </p>
+            )}
 
-                {filteredBooks.map((book) => (
-                    <BookCard
-                        key={book.id}
-                        id={book.id}
-                        title={book.title}
-                        category={book.category}
-                        rating={book.rating}
-                        cover={book.cover}
-                        description={book.description}
-                    />
-                ))}
+            {error && (
+                <p className="text-red-400">
+                    {error}
+                </p>
+            )}
 
-            </div>
+            {!loading && !error && (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    {filteredBooks.map((book) => (
+                        <BookCard
+                            key={book._id}
+                            id={book._id}
+                            title={book.title}
+                            category={book.category}
+                            rating={book.rating}
+                            cover={book.cover}
+                            description={book.description}
+                        />
+                    ))}
+
+                </div>
+            )}
 
         </main>
     )

@@ -32,21 +32,24 @@ function Sidebar({ darkMode, setDarkMode }) {
                 </h1>
 
                 <nav className="flex gap-2 text-sm overflow-x-auto">
+                    
                     <Link to="/" className={linkClass("/")}>
                         🏠
                     </Link>
 
                     <Link to="/books" className={linkClass("/books")}>
-                        📚
+                         📚
                     </Link>
 
                     <Link to="/favorites" className={linkClass("/favorites")}>
                         ❤️
                     </Link>
 
+                        {user?.isAdmin && (
                     <Link to="/admin" className={linkClass("/admin")}>
                         ⚙️
                     </Link>
+                        )}
                 </nav>
 
             </header>
@@ -72,20 +75,16 @@ function Sidebar({ darkMode, setDarkMode }) {
                             ❤️ Favoritos
                         </Link>
 
-                        <Link to="/admin" className={linkClass("/admin")}>
-                            ⚙️ Admin
-                        </Link>
+                        {user?.isAdmin && (
+                            <Link to="/admin" className={linkClass("/admin")}>
+                                ⚙️ Admin
+                            </Link>
+                        )}
                     </nav>
                 </div>
 
                 <div>
-                    <button
-                        onClick={() => setDarkMode(!darkMode)}
-                        className="w-full bg-zinc-800 hover:bg-zinc-700 duration-300 rounded-xl py-3 mb-6 text-white"
-                    >
-                        {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-                    </button>
-
+                   
                     {user ? (
                         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4">
                             <div className="flex items-center gap-3 mb-4">

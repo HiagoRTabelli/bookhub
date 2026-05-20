@@ -1,38 +1,76 @@
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import axios from "axios"
 
 function BookCard(props) {
     const [isFavorite, setIsFavorite] = useState(false)
 
-    // Quando o componente aparece na tela, verifica se esse livro já está salvo como favorito
     useEffect(() => {
-        const favorites = JSON.parse(localStorage.getItem("favorites")) || []
+      async function checkFavorite() {
+    try {
+        const token = localStorage.getItem("token")
+        const user = localStorage.getItem("user")
 
-        const bookIsFavorite = favorites.includes(props.id)
-
-        setIsFavorite(bookIsFavorite)
-    }, [props.id])
-
-    // Adiciona ou remove o livro dos favoritos
-    function handleFavorite() {
-        const favorites = JSON.parse(localStorage.getItem("favorites")) || []
-
-        let updatedFavorites
-
-        if (favorites.includes(props.id)) {
-            updatedFavorites = favorites.filter((id) => id !== props.id)
+        if (!token || !user) {
             setIsFavorite(false)
-        } else {
-            updatedFavorites = [...favorites, props.id]
-            setIsFavorite(true)
+            return
         }
 
-        localStorage.setItem("favorites", JSON.stringify(updatedFavorites))
+        const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/api/favorites`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+
+        const favoriteExists = response.data.some(
+            (book) => book._id === props.id
+        )
+
+        setIsFavorite(favoriteExists)
+
+    } catch (error) {
+        console.log(error)
     }
+}
+
+        checkFavorite()
+    }, [props.id])
+
+    async function handleFavorite() {
+    try {
+        const token = localStorage.getItem("token")
+        const user = localStorage.getItem("user")
+
+        if (!token || !user) {
+            alert("Você precisa fazer login para favoritar.")
+            return
+        }
+
+        await axios.post(
+            `${import.meta.env.VITE_API_URL}/api/favorites`,
+            {
+                bookId: props.id,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+
+        setIsFavorite(!isFavorite)
+
+    } catch (error) {
+        console.log(error)
+        alert("Erro ao favoritar livro.")
+    }
+}
 
     return (
         <div className="bg-zinc-800 rounded-2xl overflow-hidden border border-zinc-700 hover:scale-105 duration-300">
-
             <div className="h-72 bg-zinc-700">
                 <img
                     src={props.cover}
@@ -42,9 +80,7 @@ function BookCard(props) {
             </div>
 
             <div className="p-5">
-
                 <div className="flex justify-between gap-3">
-
                     <h3 className="text-2xl font-bold mb-2">
                         {props.title}
                     </h3>
@@ -55,7 +91,6 @@ function BookCard(props) {
                     >
                         {isFavorite ? "♥" : "♡"}
                     </button>
-
                 </div>
 
                 <p className="text-zinc-400 mb-3">
@@ -67,7 +102,6 @@ function BookCard(props) {
                 </p>
 
                 <div className="flex justify-between items-center">
-
                     <span className="text-yellow-400">
                         ⭐ {props.rating}
                     </span>
@@ -78,11 +112,8 @@ function BookCard(props) {
                     >
                         Ver mais
                     </Link>
-
                 </div>
-
             </div>
-
         </div>
     )
 }

@@ -1,8 +1,9 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import axios from "axios"
 
-function AddBook() {
+function EditBook() {
+    const { id } = useParams()
     const navigate = useNavigate()
 
     const [title, setTitle] = useState("")
@@ -12,55 +13,20 @@ function AddBook() {
     const [cover, setCover] = useState(null)
     const [preview, setPreview] = useState("")
     const [loading, setLoading] = useState(false)
-    const [message, setMessage] = useState("")
-    const [error, setError] = useState("")
 
-    async function handleSubmit(event) {
-        event.preventDefault()
+    useEffect(() => {
+        async function fetchBook() {
+            axios.get(`${import.meta.env.VITE_API_URL}/api/books/${id}`)
 
-        setLoading(true)
-        setMessage("")
-        setError("")
-
-        try {
-            const token = localStorage.getItem("token")
-
-            const formData = new FormData()
-
-            formData.append("title", title)
-            formData.append("category", category)
-            formData.append("description", description)
-            formData.append("rating", rating)
-            formData.append("cover", cover)
-
-            axios.post(
-                `${import.meta.env.VITE_API_URL}/api/books`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            )
-
-            setMessage("Livro adicionado com sucesso!")
-
-            setTimeout(() => {
-                navigate("/admin")
-            }, 1200)
-
-        } catch (error) {
-            console.log(error)
-
-            setError(
-                "Erro ao adicionar livro. Verifique os campos e tente novamente."
-            )
-
-        } finally {
-            setLoading(false)
+            setTitle(response.data.title)
+            setCategory(response.data.category)
+            setDescription(response.data.description)
+            setRating(response.data.rating)
+            setPreview(response.data.cover)
         }
-    }
+
+        fetchBook()
+    }, [id])
 
     function handleImageChange(event) {
         const file = event.target.files[0]
@@ -71,14 +37,54 @@ function AddBook() {
         }
     }
 
+    async function handleSubmit(event) {
+        event.preventDefault()
+
+        setLoading(true)
+
+        try {
+            const token = localStorage.getItem("token")
+
+            const formData = new FormData()
+
+            formData.append("title", title)
+            formData.append("category", category)
+            formData.append("description", description)
+            formData.append("rating", rating)
+
+            if (cover) {
+                formData.append("cover", cover)
+            }
+
+            axios.put(
+                `${import.meta.env.VITE_API_URL}/api/books/${id}`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            )
+
+            navigate("/admin")
+
+        } catch (error) {
+            console.log(error)
+            alert("Erro ao editar livro")
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
         <main className="max-w-3xl mx-auto px-6 py-16">
             <h1 className="text-5xl font-bold mb-3">
-                Adicionar Livro
+                Editar Livro
             </h1>
 
             <p className="text-zinc-400 mb-10">
-                Envie uma capa real do seu computador.
+                Atualize os dados do livro.
             </p>
 
             <form
@@ -110,27 +116,17 @@ function AddBook() {
                 />
 
                 <label className="bg-zinc-800 border-2 border-dashed border-zinc-700 rounded-2xl p-6 cursor-pointer hover:border-blue-400 duration-300 text-center flex flex-col items-center justify-center gap-4">
-                    {preview ? (
+                    {preview && (
                         <img
                             src={preview}
                             alt="Preview da capa"
                             className="w-48 h-64 object-cover rounded-xl shadow-lg"
                         />
-                    ) : (
-                        <>
-                            <span className="text-5xl">
-                                📚
-                            </span>
-
-                            <span className="font-semibold text-blue-400">
-                                Adicionar foto da capa
-                            </span>
-
-                            <p className="text-zinc-500 text-sm">
-                                PNG, JPG ou WEBP
-                            </p>
-                        </>
                     )}
+
+                    <span className="font-semibold text-blue-400">
+                        Trocar capa
+                    </span>
 
                     <input
                         type="file"
@@ -148,27 +144,15 @@ function AddBook() {
                     className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-blue-400 resize-none"
                 />
 
-                {message && (
-                    <p className="bg-green-500/20 border border-green-500 text-green-300 p-3 rounded-xl">
-                        {message}
-                    </p>
-                )}
-
-                {error && (
-                    <p className="bg-red-500/20 border border-red-500 text-red-300 p-3 rounded-xl">
-                        {error}
-                    </p>
-                )}
-
                 <button
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-600 duration-300 rounded-xl py-4 font-bold text-lg"
                 >
-                    {loading ? "Salvando..." : "Adicionar Livro"}
+                    {loading ? "Salvando..." : "Salvar alterações"}
                 </button>
             </form>
         </main>
     )
 }
 
-export default AddBook
+export default EditBook

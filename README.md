@@ -1,16 +1,102 @@
-# React + Vite
+# BookHub 📚
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A virtual library system built with React and TailwindCSS.
 
-Currently, two official plugins are available:
+The project allows users to browse books, search, favorite, rate, and manage books through an admin dashboard.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+# 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+✅ Modern homepage  
+✅ Book library  
+✅ Book search  
+✅ Category filters  
+✅ Individual book pages  
+✅ Favorites with localStorage  
+✅ Star rating system  
+✅ Fake authentication system  
+✅ Admin dashboard  
+✅ Add new books  
+✅ Delete custom books  
+✅ Dark Mode / Light Mode  
+✅ Mobile responsive layout  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# 🛠️ Technologies Used
+
+- React
+- React Router DOM
+- TailwindCSS
+- JavaScript
+- Vite
+- LocalStorage
+
+---
+
+# 📷 Preview
+
+## Home
+
+Modern interface featuring popular books.
+
+## Library
+
+Book listing with search and category filters.
+
+## Admin Dashboard
+
+Administrative panel for managing books.
+
+---
+
+# ⚙️ Running the Project
+
+## Install dependencies
+
+```bash
+npm install
+```
+
+## Start development server
+
+```bash
+npm run dev
+```
+
+---
+
+# 📚 What I Learned
+
+This project was developed to practice:
+
+- Componentization
+- React Router
+- Hooks
+- useState
+- useEffect
+- Form handling
+- localStorage persistence
+- React application architecture
+- Responsive layouts
+- Frontend CRUD operations
+
+---
+
+# 🔮 Future Improvements
+
+- Backend with Node.js
+- REST API
+- MongoDB database
+- Real authentication with JWT
+- Image upload system
+- Real user accounts
+- Book comments
+- Ranking system
+
+---
+
+# 👨‍💻 Author
+
+Developed by Hiago Rodrigues.

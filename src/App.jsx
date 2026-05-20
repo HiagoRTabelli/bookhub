@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom"
 import { useEffect, useState } from "react"
 
 import Sidebar from "./components/Sidebar"
-
+import EditBook from "./pages/EditBook"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
@@ -54,6 +54,16 @@ function App() {
                 <AdminDashboard />
               </ProtectedRoute>
             }
+          />
+
+          <Route
+              path="/admin/edit-book/:id"
+              element={
+                <ProtectedRoute>
+                  <EditBook />
+                </ProtectedRoute>
+              }
+               
           />
 
           <Route
